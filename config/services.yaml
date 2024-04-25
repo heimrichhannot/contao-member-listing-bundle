@@ -1,0 +1,5 @@
+services:
+  HeimrichHannot\MemberListingBundle\:
+    resource: '../src/{Controller}/*'
+    autoconfigure: true
+    autowire: true
