@@ -1,0 +1,21 @@
+{% extends '@Contao/block_searchable.html5' %}
+
+{% block content %}
+    <p>{% if members is empty %}
+        {{ 'tl_content.MSC.memberListing.emptyMemberlist'|trans({}, 'contao_tl_content') }}
+    {% else %}
+        {{ 'tl_content.MSC.memberListing.results'|trans({0:total}, 'contao_tl_content') }}
+    {% endif %}
+    </p>
+
+    {% block members %}
+        <ul>
+            {% for member in members %}
+                <li>{{ member.firstname }} {{ member.lastname }}</li>
+            {% endfor %}
+        </ul>
+    {% endblock %}
+
+    {{ pagination|default|raw }}
+{% endblock %}
+
