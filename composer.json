@@ -15,5 +15,11 @@
   },
   "extra": {
     "contao-manager-plugin": "HeimrichHannot\\MemberListingBundle\\ContaoManager\\Plugin"
+  },
+  "config": {
+    "allow-plugins": {
+      "contao-components/installer": false,
+      "php-http/discovery": false
+    }
   }
 }
