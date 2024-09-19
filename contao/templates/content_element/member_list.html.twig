@@ -16,6 +16,8 @@
         </ul>
     {% endblock %}
 
-    {{ pagination|default|raw }}
+    {% if pagination|default %}
+        {{ pagination.generate("\n ")|raw }}
+    {% endif %}
 {% endblock %}
 

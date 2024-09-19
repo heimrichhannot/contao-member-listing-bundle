@@ -52,6 +52,7 @@ class MemberListElementController extends AbstractContentElementController
         $offset = ($page - 1) * $limit;
 
         $queryBuilder->select('*');
+        $queryBuilder->orderBy('FIELD(id, :ids)');
         $queryBuilder->setFirstResult($offset);
         if ($limit > 0) {
              $queryBuilder->setMaxResults($limit);
@@ -65,34 +66,13 @@ class MemberListElementController extends AbstractContentElementController
         $template->members = $members;
 
         $template->pagination = null;
-        $template->pagination_raw = null;
         if ($limit > 0) {
             $pagination = new Pagination($total, $limit, 7, 'mlpage');
-            $template->pagination = $pagination->generate("\n  ");
+            $template->pagination = $pagination;
         }
 
         $template->total = $total;
 
         return $template->getResponse();
-//
-//        $this->mlSort = StringUtil::deserialize($this->mlSort);
-//
-//        $this->Controller = new MemberPlus($this->objModel);
-//
-//        $this->objMembers =  MemberPlusMemberModel::findActiveByIds($this->mlSort);
-//
-//        if ($this->objMembers === null) {
-//            $this->Template->empty = $GLOBALS['TL_LANG']['MSC']['emptyMemberlist'];
-//
-//            return;
-//        }
-//
-//        $arrMembers = [];
-//
-//        while ($this->objMembers->next()) {
-//            $arrMembers[$this->objMembers->id] = $this->Controller->parseMember($this->objMembers->current());
-//        }
-//
-//        $this->Template->members = $arrMembers;
     }
 }
