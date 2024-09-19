@@ -20,8 +20,7 @@ class MemberListElementController extends AbstractContentElementController
 
     public function __construct(
         private readonly Connection $connection,
-    )
-    {
+    ) {
     }
 
     protected function getResponse(Template $template, ContentModel $model, Request $request): Response
@@ -44,7 +43,7 @@ class MemberListElementController extends AbstractContentElementController
         $total = $result->rowCount();
         $limit = $model->perPage ?? 0;
 
-        $page = (int)$request->query->get('mlpage', 0);
+        $page = (int) $request->query->get('mlpage', 0);
         if ($page < 1) {
             $page = 1;
         }

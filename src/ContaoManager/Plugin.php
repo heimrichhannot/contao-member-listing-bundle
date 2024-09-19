@@ -12,9 +12,6 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 
 class Plugin implements BundlePluginInterface, ConfigPluginInterface
 {
-    /**
-     * @inheritDoc
-     */
     public function getBundles(ParserInterface $parser)
     {
         return [
