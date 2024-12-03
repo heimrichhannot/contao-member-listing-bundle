@@ -1,3 +1,4 @@
+{% import "@ContaoCore/Image/Studio/_macros.html.twig" as studio %}
 {% extends '@Contao/block_searchable.html5' %}
 
 {% block content %}
@@ -9,11 +10,20 @@
     </p>
 
     {% block members %}
-        <ul>
             {% for member in members %}
-                <li>{{ member.firstname }} {{ member.lastname }}</li>
+                <div class="member">
+                    <div class="image">
+                        {% if member.figure|default %}
+                            {{ studio.figure(member.figure, {}, false) }}
+                        {% endif %}
+                    </div>
+                    <div class="data">
+                        {{ member.name }}
+                    </div>
+                </div>
+
             {% endfor %}
-        </ul>
+        </>
     {% endblock %}
 
     {% if pagination|default %}
