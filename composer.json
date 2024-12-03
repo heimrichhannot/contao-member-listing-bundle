@@ -24,5 +24,10 @@
       "contao-components/installer": false,
       "php-http/discovery": false
     }
+  },
+  "require-dev": {
+    "contao/manager-plugin": "^2.0",
+    "phpstan/phpstan": "^2.0",
+    "phpstan/phpstan-symfony": "^2.0"
   }
 }

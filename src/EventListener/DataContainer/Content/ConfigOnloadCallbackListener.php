@@ -15,8 +15,7 @@ class ConfigOnloadCallbackListener
 {
     public function __construct(
         private readonly RequestStack $requestStack,
-    )
-    {
+    ) {
     }
 
     public function __invoke(DataContainer|null $dc = null): void

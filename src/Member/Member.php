@@ -13,11 +13,15 @@ use Spatie\SchemaOrg\PostalAddress;
 class Member
 {
     private array $data;
+
     private array $dirty = [];
+
     private ?string $website;
 
-    public function __construct(array|MemberModel|UserModel $data, private readonly ?Figure $figure = null)
-    {
+    public function __construct(
+        array|MemberModel|UserModel $data,
+        private readonly ?Figure $figure = null
+    ) {
         if ($data instanceof Model) {
             $data = $data->row();
         }

@@ -24,11 +24,10 @@ class MemberListElementController extends AbstractContentElementController
     public const TYPE = 'huh_memberlist';
 
     public function __construct(
-        private readonly Connection              $connection,
-        private readonly Studio                  $studio,
+        private readonly Connection $connection,
+        private readonly Studio $studio,
         private readonly ResponseContextAccessor $responseContextAccessor,
-    )
-    {
+    ) {
     }
 
     protected function getResponse(Template $template, ContentModel $model, Request $request): Response
@@ -51,7 +50,7 @@ class MemberListElementController extends AbstractContentElementController
         $total = $result->rowCount();
         $limit = $model->perPage ?? 0;
 
-        $page = (int)$request->query->get('mlpage', 0);
+        $page = (int) $request->query->get('mlpage');
         if ($page < 1) {
             $page = 1;
         }
@@ -80,7 +79,7 @@ class MemberListElementController extends AbstractContentElementController
 
         $template->total = $total;
 
-        $response =  $template->getResponse();
+        $response = $template->getResponse();
 
         $this->addJsonLdContext($members, $model);
 
@@ -111,6 +110,7 @@ class MemberListElementController extends AbstractContentElementController
         $jsonLd = [
             '@type' => 'ItemList',
             '@context' => 'https://schema.org',
+            'identifier' => '#/element/member_list/'.$model->id,
         ];
 
         if ($model->name) {
@@ -118,7 +118,6 @@ class MemberListElementController extends AbstractContentElementController
         }
 
         $jsonLd['itemListElement'] = array_map(fn(Member $member, int $index) => $member->getSchemaOrgData(), $members, array_keys($members));
-
 
         $responseContext = $this->responseContextAccessor->getResponseContext();
 
@@ -132,7 +131,7 @@ class MemberListElementController extends AbstractContentElementController
 
         $jsonLdManager
             ->getGraphForSchema(JsonLdManager::SCHEMA_ORG)
-            ->set($type, $jsonLd['identifier'] ?? Graph::IDENTIFIER_DEFAULT)
+            ->set($type, $jsonLd['identifier'])
         ;
     }
 }
