@@ -31,7 +31,7 @@ return RectorConfig::configure()
     ])
     ->withSkip([
         RestoreDefaultNullToNullableTypePropertyRector::class => [
-            __DIR__ . '/../../src//Member/Member.php',
+            __DIR__ . '/../../src/Member/Member.php',
         ],
     ])
 ;
