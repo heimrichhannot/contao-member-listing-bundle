@@ -1,0 +1,45 @@
+{% import "@ContaoCore/Image/Studio/_macros.html.twig" as studio %}
+{% extends '@Contao/content_element/member_list.html.twig' %}
+
+{% block content %}
+    <p>{% if members is empty %}
+            {{ 'tl_content.MSC.memberListing.emptyMemberlist'|trans({}, 'contao_tl_content') }}
+        {% else %}
+            {{ 'tl_content.MSC.memberListing.results'|trans({0:total}, 'contao_tl_content') }}
+        {% endif %}
+    </p>
+
+    {% for member in members %}
+        <div class="card mb-3" style="max-width: 540px;">
+            <div class="row g-0">
+                 {% set image = false %}
+                {% if member.figure|default %}
+                    {% set image = true %}
+                    <div class="col-md-4">
+                        {{ studio.figure(member.figure, {
+                            img_attr: {
+                                class: 'img-fluid rounded-start'
+                            }
+                        }, false) }}
+                    </div>
+                {% endif %}
+                <div class="{% if image %}col-md-8{% else %}col-md-12{% endif %}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ member.name }}</h5>
+                        <p class="card-text">
+                            {{ member.email|default }}<br>
+                            {{ member.phone|default }}<br>
+                            {{ member.fax|default }}<br>
+                            {{ member.website|default }}
+                        </p>
+                        <p class="card-text"><small class="text-body-secondary">{{ 'MSC.dateAdded.0'|trans({}, 'contao_default') }} {{ member.dateAdded|date('d.m.Y') }}</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+    {% if pagination|default %}
+        {{ pagination.generate("\n ")|raw }}
+    {% endif %}
+{% endblock %}
