@@ -117,9 +117,7 @@ class MemberListElementController extends AbstractContentElementController
             $jsonLd['name'] = $model->name;
         }
 
-        $jsonLd['itemListElement'] = array_map(function (Member $member, int $index) {
-            return $member->getSchemaOrgData();
-        }, $members, array_keys($members));
+        $jsonLd['itemListElement'] = array_map(fn(Member $member, int $index) => $member->getSchemaOrgData(), $members, array_keys($members));
 
 
         $responseContext = $this->responseContextAccessor->getResponseContext();

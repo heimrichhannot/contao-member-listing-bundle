@@ -14,10 +14,9 @@ class Member
 {
     private array $data;
     private array $dirty = [];
-    private ?Figure $figure;
     private ?string $website;
 
-    public function __construct(array|MemberModel|UserModel $data, ?Figure $figure = null)
+    public function __construct(array|MemberModel|UserModel $data, private readonly ?Figure $figure = null)
     {
         if ($data instanceof Model) {
             $data = $data->row();
@@ -28,22 +27,17 @@ class Member
         }
 
         $this->data = $data;
-        $this->figure = $figure;
     }
 
     public function __get(string $name): mixed
     {
         if (isset($this->data[$name])) {
             $this->dirty[] = $name;
-
-            switch ($name) {
-                case 'website':
-                    return $this->website();
-                case 'figure':
-                    return $this->figure();
-            }
-
-            return $this->data[$name];
+            return match ($name) {
+                'website' => $this->website(),
+                'figure' => $this->figure(),
+                default => $this->data[$name],
+            };
         }
 
         throw new \InvalidArgumentException(sprintf('Property "%s" does not exist.', $name));
@@ -64,9 +58,9 @@ class Member
         if (!isset($this->website)) {
             if (empty($this->data['website'])) {
                 $this->website = null;
-            } elseif (!str_starts_with($this->data['website'], 'http')) {
+            } elseif (!str_starts_with((string) $this->data['website'], 'http')) {
                 $this->website = 'https://' . $this->data['website'];
-            } elseif (str_starts_with($this->data['website'], 'http://')) {
+            } elseif (str_starts_with((string) $this->data['website'], 'http://')) {
                 $this->website = str_replace('http://', 'https://', $this->data['website']);
             } else {
                 $this->website = $this->data['website'];
