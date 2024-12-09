@@ -8,13 +8,13 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\Pagination;
 use Contao\StringUtil;
 use Contao\Template;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use HeimrichHannot\MemberListingBundle\Member\Member;
-use Spatie\SchemaOrg\Graph;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -27,6 +27,7 @@ class MemberListElementController extends AbstractContentElementController
         private readonly Connection $connection,
         private readonly Studio $studio,
         private readonly ResponseContextAccessor $responseContextAccessor,
+        private readonly ScopeMatcher $scopeMatcher,
     ) {
     }
 
@@ -48,6 +49,14 @@ class MemberListElementController extends AbstractContentElementController
         $result = $queryBuilder->executeQuery();
 
         $total = $result->rowCount();
+        $template->total = $total;
+
+        if ($this->scopeMatcher->isBackendRequest($request)) {
+            $template->members = [];
+            $template->pagination = null;
+            return $template->getResponse();
+        }
+
         $limit = $model->perPage ?? 0;
 
         $page = (int) $request->query->get('mlpage');
@@ -77,8 +86,6 @@ class MemberListElementController extends AbstractContentElementController
             $template->pagination = $pagination;
         }
 
-        $template->total = $total;
-
         $response = $template->getResponse();
 
         $this->addJsonLdContext($members, $model);
@@ -86,6 +93,11 @@ class MemberListElementController extends AbstractContentElementController
         return $response;
     }
 
+    /**
+     * @param array<mixed> $row
+     * @param ContentModel $model
+     * @return Member
+     */
     protected function buildMemberObject(array $row, ContentModel $model): Member
     {
         $figure = null;
@@ -105,12 +117,17 @@ class MemberListElementController extends AbstractContentElementController
         return new Member($row, $figure);
     }
 
+    /**
+     * @param array<Member> $members
+     * @param ContentModel $model
+     * @return void
+     */
     protected function addJsonLdContext(array $members, ContentModel $model): void
     {
         $jsonLd = [
             '@type' => 'ItemList',
             '@context' => 'https://schema.org',
-            'identifier' => '#/element/member_list/'.$model->id,
+            'identifier' => '#/element/member_list/' . $model->id,
         ];
 
         if ($model->name) {

@@ -1,7 +1,7 @@
 {% extends '@Contao/block_searchable.html5' %}
 
 {% block content %}
-    <p>{% if members is empty %}
+    <p>{% if total == 0 %}
         {{ 'tl_content.MSC.memberListing.emptyMemberlist'|trans({}, 'contao_tl_content') }}
     {% else %}
         {{ 'tl_content.MSC.memberListing.results'|trans({0:total}, 'contao_tl_content') }}

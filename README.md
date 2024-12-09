@@ -2,7 +2,7 @@
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/heimrichhannot/contao-member-listing-bundle.svg)](https://github.com/heimrichhannot/contao-member-listing-bundle)
 [![](https://img.shields.io/packagist/dt/heimrichhannot/contao-member-listing-bundle.svg)](https://packagist.org/packages/heimrichhannot/contao-member-listing-bundle)
-![](https://img.shields.io/badge/PHPStan-level%205-brightgreen.svg?style=flat)
+![](https://img.shields.io/badge/PHPStan-level%208-brightgreen.svg?style=flat)
 
 This bundle provides a simple content element to list frontend members.
 

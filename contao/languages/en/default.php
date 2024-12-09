@@ -2,4 +2,4 @@
 
 use HeimrichHannot\MemberListingBundle\Controller\ContentElement\MemberListElementController;
 
-$GLOBALS['TL_LANG']['CTE'][MemberListElementController::TYPE] = 'Member list';
+$GLOBALS['TL_LANG']['CTE'][MemberListElementController::TYPE][0] = 'Member list';

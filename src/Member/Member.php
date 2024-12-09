@@ -12,12 +12,22 @@ use Spatie\SchemaOrg\PostalAddress;
 
 class Member
 {
+    /**
+     * @var array<string, mixed>
+     */
     private array $data;
 
+    /**
+     * @var string[]
+     */
     private array $dirty = [];
 
     private ?string $website;
 
+    /**
+     * @param array<string, mixed>|MemberModel|UserModel $data
+     * @param Figure|null $figure
+     */
     public function __construct(
         array|MemberModel|UserModel $data,
         private readonly ?Figure $figure = null
@@ -74,6 +84,9 @@ class Member
         return $this->website;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getSchemaOrgData(): array
     {
         $person = new Person();
@@ -105,7 +118,9 @@ class Member
                     $person->faxNumber($value);
                     continue 2;
                 case 'website':
-                    $person->url($this->website());
+                    if ($this->website() !== null) {
+                        $person->url($this->website());
+                    }
                     continue 2;
             }
 

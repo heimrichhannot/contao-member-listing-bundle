@@ -20,6 +20,7 @@ return RectorConfig::configure()
     ->withRules([
         AddVoidReturnTypeWhereNoReturnRector::class,
     ])
+    ->withImportNames(importShortClasses: false, removeUnusedImports: true)
     ->withSets([
         SetList::PHP_81,
         LevelSetList::UP_TO_PHP_81,
