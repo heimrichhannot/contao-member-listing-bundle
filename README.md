@@ -9,9 +9,9 @@ This bundle provides a simple content element to list frontend members.
 ## Features
 
 - List frontend members
-- Choose the members to show with a member picker wizard.
-- JSON-LD with the selected member's data included.
-- Supports showing member images.
+- Choose the members to show with a member picker wizard
+- JSON-LD with the selected member's data included
+- Supports showing member images
 
 ## Installation
 
