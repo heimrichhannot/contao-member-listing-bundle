@@ -3,6 +3,7 @@
 namespace HeimrichHannot\MemberListingBundle\Controller\ContentElement;
 
 use Contao\ContentModel;
+use Contao\Controller;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\Image\Studio\Studio;
@@ -33,6 +34,8 @@ class MemberListElementController extends AbstractContentElementController
 
     protected function getResponse(Template $template, ContentModel $model, Request $request): Response
     {
+        Controller::loadDataContainer('tl_member');
+
         $memberIds = array_filter(StringUtil::deserialize($model->mlSort));
 
         if (empty($memberIds)) {
@@ -100,21 +103,19 @@ class MemberListElementController extends AbstractContentElementController
      */
     protected function buildMemberObject(array $row, ContentModel $model): Member
     {
-        $figure = null;
+        // If addImage is defined in the DCA, we check if it is set to true on the row. Otherwise, it defaults to true.
+        $addImage = !isset($GLOBALS['TL_DCA']['tl_member']['fields']['addImage']) || ($row['addImage'] ?? false);
+        $src = $row['singleSRC'] ?? null;
 
-        if (!empty($row['addImage']) && !empty($row['singleSRC'])) {
+        if ($addImage && $src)
+        {
             $figure = $this->studio->createFigureBuilder()
-                ->from($row['singleSRC'])
-                ->setSize($model->size)
-                ->buildIfResourceExists();
-        } elseif (!isset($row['addImage']) && !empty($row['singleSRC'])) {
-            $figure = $this->studio->createFigureBuilder()
-                ->from($row['singleSRC'])
+                ->from($src)
                 ->setSize($model->size)
                 ->buildIfResourceExists();
         }
 
-        return new Member($row, $figure);
+        return new Member($row, $figure ?? null);
     }
 
     /**
