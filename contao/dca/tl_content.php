@@ -4,7 +4,7 @@ use HeimrichHannot\MemberListingBundle\Controller\ContentElement\MemberListEleme
 
 $dca = &$GLOBALS['TL_DCA']['tl_content'];
 
-$dca['palettes'][MemberListElementController::TYPE] = '{type_legend},type,headline;{ml_config_legend},mlSort,perPage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},guests,cssID;{invisible_legend:hide},invisible,start,stop';
+$dca['palettes'][MemberListElementController::TYPE] = '{type_legend},type,headline;{ml_config_legend},mlSort,perPage;{template_legend:collapsed},customTpl;{protected_legend:collapsed},protected;{expert_legend:collapsed},guests,cssID;{invisible_legend:collapsed},invisible,start,stop';
 
 $dca['fields']['mlSort'] = [
     'exclude' => true,
