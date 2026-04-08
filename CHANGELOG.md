@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.0.0] - 2026-04-08
+- Changed: require contao 5.3 or higher
+
 ## [0.1.3] - 2025-07-10
 - Fixed: compatibility with migration to Contao 5
   - If data was migrated from Contao 4, and migrations didn't run with deletes, the
