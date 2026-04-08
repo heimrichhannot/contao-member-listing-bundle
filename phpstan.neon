@@ -2,6 +2,7 @@ parameters:
   level: 8
   paths:
     - src
+    - contao
   universalObjectCratesClasses:
     - Contao\Model
     - Contao\Template
