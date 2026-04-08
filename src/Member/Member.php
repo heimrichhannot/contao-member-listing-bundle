@@ -26,18 +26,17 @@ class Member
 
     /**
      * @param array<string, mixed>|MemberModel|UserModel $data
-     * @param Figure|null $figure
      */
     public function __construct(
         array|MemberModel|UserModel $data,
-        private readonly ?Figure $figure = null
+        private readonly ?Figure $figure = null,
     ) {
         if ($data instanceof Model) {
             $data = $data->row();
         }
 
         if (!isset($data['name']) && isset($data['firstname'], $data['lastname'])) {
-            $data['name'] = $data['firstname'] . ' ' . $data['lastname'];
+            $data['name'] = $data['firstname'].' '.$data['lastname'];
         }
 
         $this->data = $data;
@@ -47,6 +46,7 @@ class Member
     {
         if (isset($this->data[$name])) {
             $this->dirty[] = $name;
+
             return match ($name) {
                 'website' => $this->website(),
                 'figure' => $this->figure(),
@@ -73,7 +73,7 @@ class Member
             if (empty($this->data['website'])) {
                 $this->website = null;
             } elseif (!str_starts_with((string) $this->data['website'], 'http')) {
-                $this->website = 'https://' . $this->data['website'];
+                $this->website = 'https://'.$this->data['website'];
             } elseif (str_starts_with((string) $this->data['website'], 'http://')) {
                 $this->website = str_replace('http://', 'https://', $this->data['website']);
             } else {
@@ -118,7 +118,7 @@ class Member
                     $person->faxNumber($value);
                     continue 2;
                 case 'website':
-                    if ($this->website() !== null) {
+                    if (null !== $this->website()) {
                         $person->url($this->website());
                     }
                     continue 2;

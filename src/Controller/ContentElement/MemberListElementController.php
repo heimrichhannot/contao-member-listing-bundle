@@ -41,6 +41,7 @@ class MemberListElementController extends AbstractContentElementController
         if (empty($memberIds)) {
             $template->set('total', 0);
             $template->set('members', []);
+
             return $template->getResponse();
         }
 
@@ -58,6 +59,7 @@ class MemberListElementController extends AbstractContentElementController
         if ($this->scopeMatcher->isBackendRequest($request)) {
             $template->set('members', []);
             $template->set('pagination', null);
+
             return $template->getResponse();
         }
 
@@ -86,7 +88,7 @@ class MemberListElementController extends AbstractContentElementController
 
         $template->set('pagination', null);
         if ($limit > 0) {
-            $pagination = new Pagination((int)$total, $limit, 7, 'mlpage');
+            $pagination = new Pagination((int) $total, $limit, 7, 'mlpage');
             $template->set('pagination', $pagination);
         }
 
@@ -99,8 +101,6 @@ class MemberListElementController extends AbstractContentElementController
 
     /**
      * @param array<mixed> $row
-     * @param ContentModel $model
-     * @return Member
      */
     protected function buildMemberObject(array $row, ContentModel $model): Member
     {
@@ -108,8 +108,7 @@ class MemberListElementController extends AbstractContentElementController
         $addImage = !isset($GLOBALS['TL_DCA']['tl_member']['fields']['addImage']) || ($row['addImage'] ?? false);
         $src = $row['singleSRC'] ?? null;
 
-        if ($addImage && $src)
-        {
+        if ($addImage && $src) {
             $figure = $this->studio->createFigureBuilder()
                 ->from($src)
                 ->setSize($model->size)
@@ -121,22 +120,20 @@ class MemberListElementController extends AbstractContentElementController
 
     /**
      * @param array<Member> $members
-     * @param ContentModel $model
-     * @return void
      */
     protected function addJsonLdContext(array $members, ContentModel $model): void
     {
         $jsonLd = [
             '@type' => 'ItemList',
             '@context' => 'https://schema.org',
-            'identifier' => '#/element/member_list/' . $model->id,
+            'identifier' => '#/element/member_list/'.$model->id,
         ];
 
         if ($model->name) {
             $jsonLd['name'] = $model->name;
         }
 
-        $jsonLd['itemListElement'] = array_map(fn(Member $member, int $index) => $member->getSchemaOrgData(), $members, array_keys($members));
+        $jsonLd['itemListElement'] = array_map(fn (Member $member, int $index) => $member->getSchemaOrgData(), $members, array_keys($members));
 
         $responseContext = $this->responseContextAccessor->getResponseContext();
 

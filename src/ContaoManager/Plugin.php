@@ -23,9 +23,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface
     }
 
     /**
-     * @param LoaderInterface $loader
      * @param array<mixed> $managerConfig
-     * @return void
+     *
      * @throws \Exception
      */
     public function registerContainerConfiguration(LoaderInterface $loader, array $managerConfig): void
