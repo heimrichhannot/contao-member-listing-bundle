@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Contao\Rector\Set\ContaoLevelSetList;
 use Contao\Rector\Set\ContaoSetList;
-use HeimrichHannot\MemberListingBundle\Member\Member;
 use Rector\Config\RectorConfig;
 use Rector\Php74\Rector\Property\RestoreDefaultNullToNullableTypePropertyRector;
 use Rector\Php81\Rector\Array_\ArrayToFirstClassCallableRector;

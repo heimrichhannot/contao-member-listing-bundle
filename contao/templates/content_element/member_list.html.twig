@@ -1,5 +1,7 @@
 {% extends '@Contao/content_element/_base.html.twig' %}
 
+{% set attributes = attrs().addClass('ce_huh_memberlist').mergeWith(attributes|default) %}
+
 {% block content %}
     <p>{% if total == 0 %}
         {{ 'tl_content.MSC.memberListing.emptyMemberlist'|trans({}, 'contao_tl_content') }}
