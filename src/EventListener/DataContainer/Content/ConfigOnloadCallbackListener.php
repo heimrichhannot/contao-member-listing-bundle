@@ -18,7 +18,7 @@ class ConfigOnloadCallbackListener
     ) {
     }
 
-    public function __invoke(DataContainer|null $dc = null): void
+    public function __invoke(?DataContainer $dc = null): void
     {
         if (null === $dc || !$dc->id || 'edit' !== $this->requestStack->getCurrentRequest()?->query->get('act')) {
             return;

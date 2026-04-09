@@ -1,4 +1,6 @@
-{% extends '@Contao/block_searchable.html5' %}
+{% extends '@Contao/content_element/_base.html.twig' %}
+
+{% set attributes = attrs().addClass('ce_huh_memberlist').mergeWith(attributes|default) %}
 
 {% block content %}
     <p>{% if total == 0 %}

@@ -10,9 +10,9 @@ use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\Pagination;
 use Contao\StringUtil;
-use Contao\Template;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use HeimrichHannot\MemberListingBundle\Member\Member;
@@ -32,14 +32,16 @@ class MemberListElementController extends AbstractContentElementController
     ) {
     }
 
-    protected function getResponse(Template $template, ContentModel $model, Request $request): Response
+    protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
         Controller::loadDataContainer('tl_member');
 
-        $memberIds = array_filter(StringUtil::deserialize($model->mlSort));
+        $memberIds = array_filter(StringUtil::deserialize($model->mlSort, true));
 
         if (empty($memberIds)) {
-            $template->empty = $GLOBALS['TL_LANG']['MSC']['emptyMemberlist'];
+            $template->set('total', 0);
+            $template->set('members', []);
+
             return $template->getResponse();
         }
 
@@ -52,11 +54,12 @@ class MemberListElementController extends AbstractContentElementController
         $result = $queryBuilder->executeQuery();
 
         $total = $result->rowCount();
-        $template->total = $total;
+        $template->set('total', $total);
 
         if ($this->scopeMatcher->isBackendRequest($request)) {
-            $template->members = [];
-            $template->pagination = null;
+            $template->set('members', []);
+            $template->set('pagination', null);
+
             return $template->getResponse();
         }
 
@@ -81,12 +84,12 @@ class MemberListElementController extends AbstractContentElementController
         while ($row = $result->fetchAssociative()) {
             $members[] = $this->buildMemberObject($row, $model);
         }
-        $template->members = $members;
+        $template->set('members', $members);
 
-        $template->pagination = null;
+        $template->set('pagination', null);
         if ($limit > 0) {
-            $pagination = new Pagination($total, $limit, 7, 'mlpage');
-            $template->pagination = $pagination;
+            $pagination = new Pagination((int) $total, $limit, 7, 'mlpage');
+            $template->set('pagination', $pagination);
         }
 
         $response = $template->getResponse();
@@ -98,8 +101,6 @@ class MemberListElementController extends AbstractContentElementController
 
     /**
      * @param array<mixed> $row
-     * @param ContentModel $model
-     * @return Member
      */
     protected function buildMemberObject(array $row, ContentModel $model): Member
     {
@@ -107,8 +108,7 @@ class MemberListElementController extends AbstractContentElementController
         $addImage = !isset($GLOBALS['TL_DCA']['tl_member']['fields']['addImage']) || ($row['addImage'] ?? false);
         $src = $row['singleSRC'] ?? null;
 
-        if ($addImage && $src)
-        {
+        if ($addImage && $src) {
             $figure = $this->studio->createFigureBuilder()
                 ->from($src)
                 ->setSize($model->size)
@@ -120,22 +120,20 @@ class MemberListElementController extends AbstractContentElementController
 
     /**
      * @param array<Member> $members
-     * @param ContentModel $model
-     * @return void
      */
     protected function addJsonLdContext(array $members, ContentModel $model): void
     {
         $jsonLd = [
             '@type' => 'ItemList',
             '@context' => 'https://schema.org',
-            'identifier' => '#/element/member_list/' . $model->id,
+            'identifier' => '#/element/member_list/'.$model->id,
         ];
 
         if ($model->name) {
             $jsonLd['name'] = $model->name;
         }
 
-        $jsonLd['itemListElement'] = array_map(fn(Member $member, int $index) => $member->getSchemaOrgData(), $members, array_keys($members));
+        $jsonLd['itemListElement'] = array_map(fn (Member $member, int $index) => $member->getSchemaOrgData(), $members, array_keys($members));
 
         $responseContext = $this->responseContextAccessor->getResponseContext();
 
